@@ -8,8 +8,17 @@
 
 <hr>
 
-<h2>Description</h2>
-<p><%= @building.description %></p>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Description</h2>
+        <p><%= @building.description %></p>
+    </div>
+    <div class="col-md-6">
+        <h2>Informations</h2>
+        <p>Maximum: <%= @building.maximum %></p>
+        <p>Special: <% if @building.special? %>true<% else %>false<% end %></p>
+    </div>
+</div>
 
 <hr>
 
