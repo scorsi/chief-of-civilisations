@@ -2,29 +2,20 @@
 ### Seeds ###
 #############
 
-def create_main(name, description)
-  main = Main.find_by_name name
-
-  return nil unless main.nil?
-  Main.create name: name, description: description if main.nil?
-end
-
 def create_resource(name, description)
-  main = create_main name, description
-  Resource.create main: main unless main.nil?
+  Resource.create name: name, description: description
 end
 
 def create_building(name, description)
-  main = create_main name, description
-  Building.create main: main unless main.nil?
+  Building.create name: name, description: description
 end
 
 def create_building_tier(name, tier, require_resources)
-  building = Building.find_by_main_name name
+  building = Building.find_by_name name
   return if building.nil?
   building_tier = BuildingTier.create building: building, tier: tier
   require_resources.each do |require_resource|
-    resource = Resource.find_by_main_name require_resource[0]
+    resource = Resource.find_by_name require_resource[0]
     next if resource.nil?
     BuildingTierResource.create building_tier: building_tier, resource: resource,
                                 quantity: require_resource[1], increase: require_resource[2]
@@ -32,27 +23,27 @@ def create_building_tier(name, tier, require_resources)
 end
 
 def create_gather_building(building_name, resource_name)
-  resource = Resource.find_by_main_name resource_name
-  building = Building.find_by_main_name building_name
+  resource = Resource.find_by_name resource_name
+  building = Building.find_by_name building_name
   return if building.nil? or resource.nil?
   GatherBuilding.create building: building, resource: resource
 end
 
 # TODO: ADD GATHER BUILDING TIER ON BUILDING __AND RESOURCE__!
-def create_gather_building_tier(name, tier, capacity, rps, increase)
+def create_gather_building_tier(name, tier, capacity, rpm, increase)
   gather_building = GatherBuilding.find_by_building_name name
   return if gather_building.nil?
   GatherBuildingTier.create gather_building: gather_building, tier: tier,
-                            rps: rps, increase: increase, capacity: capacity
+                            rpm: rpm, increase: increase, capacity: capacity
 end
 
 def create_starter_resource(name, quantity)
-  resource = Resource.find_by_main_name name
+  resource = Resource.find_by_name name
   StarterResource.create resource: resource, quantity: quantity unless resource.nil?
 end
 
 def create_starter_building(name)
-  building = Building.find_by_main_name name
+  building = Building.find_by_name name
   StarterBuilding.create building: building unless building.nil?
 end
 
@@ -88,7 +79,7 @@ create_building_tier 'barrack', 1, [['wood', 200, 0.15]]
 create_building_tier 'lumberyard', 1, [['wood', 50, 0.1]]
 create_building_tier 'lumberyard', 2, [['wood', 350, 0.1]]
 create_gather_building_tier 'lumberyard', 1, 100, 10, 0.05
-create_gather_building_tier 'lumberyard', 2, 650,30, 0.05
+create_gather_building_tier 'lumberyard', 2, 650, 30, 0.05
 # Farm
 create_building_tier 'farm', 1, [['wood', 50, 0.1]]
 create_building_tier 'farm', 2, [['wood', 250, 0.1]]

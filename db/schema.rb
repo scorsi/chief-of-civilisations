@@ -33,9 +33,10 @@ ActiveRecord::Schema.define(version: 20170802082438) do
   end
 
   create_table "buildings", force: :cascade do |t|
-    t.bigint "main_id"
+    t.string "name"
+    t.text "description"
     t.integer "maximum", default: 1
-    t.index ["main_id"], name: "index_buildings_on_main_id"
+    t.index ["name"], name: "index_buildings_on_name", unique: true
   end
 
   create_table "chief_buildings", force: :cascade do |t|
@@ -43,7 +44,7 @@ ActiveRecord::Schema.define(version: 20170802082438) do
     t.bigint "building_id"
     t.integer "level"
     t.integer "tier"
-    t.datetime "last_collect_time", default: "2017-08-02 17:18:27"
+    t.datetime "last_collect_time", default: "2017-08-03 17:07:11"
     t.index ["building_id"], name: "index_chief_buildings_on_building_id"
     t.index ["chief_id"], name: "index_chief_buildings_on_chief_id"
   end
@@ -65,7 +66,7 @@ ActiveRecord::Schema.define(version: 20170802082438) do
     t.bigint "gather_building_id"
     t.integer "tier"
     t.integer "capacity"
-    t.integer "rps"
+    t.integer "rpm"
     t.float "increase"
     t.index ["gather_building_id", "tier"], name: "index_gather_building_tiers_on_gather_building_id_and_tier", unique: true
     t.index ["gather_building_id"], name: "index_gather_building_tiers_on_gather_building_id"
@@ -78,15 +79,10 @@ ActiveRecord::Schema.define(version: 20170802082438) do
     t.index ["resource_id"], name: "index_gather_buildings_on_resource_id"
   end
 
-  create_table "mains", force: :cascade do |t|
+  create_table "resources", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.index ["name"], name: "index_mains_on_name", unique: true
-  end
-
-  create_table "resources", force: :cascade do |t|
-    t.bigint "main_id"
-    t.index ["main_id"], name: "index_resources_on_main_id"
+    t.index ["name"], name: "index_resources_on_name", unique: true
   end
 
   create_table "starter_buildings", force: :cascade do |t|
@@ -131,7 +127,6 @@ ActiveRecord::Schema.define(version: 20170802082438) do
   add_foreign_key "building_tier_resources", "building_tiers"
   add_foreign_key "building_tier_resources", "resources"
   add_foreign_key "building_tiers", "buildings"
-  add_foreign_key "buildings", "mains"
   add_foreign_key "chief_buildings", "buildings"
   add_foreign_key "chief_buildings", "chiefs"
   add_foreign_key "chief_resources", "chiefs"
@@ -140,7 +135,6 @@ ActiveRecord::Schema.define(version: 20170802082438) do
   add_foreign_key "gather_building_tiers", "gather_buildings"
   add_foreign_key "gather_buildings", "buildings"
   add_foreign_key "gather_buildings", "resources"
-  add_foreign_key "resources", "mains"
   add_foreign_key "starter_buildings", "buildings"
   add_foreign_key "starter_resources", "resources"
 end

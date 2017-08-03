@@ -28,7 +28,7 @@ class Chief < ApplicationRecord
     if resource.nil?
       resource = ChiefResource.new
       resource.chief = self
-      resource.resource = Resource.find_by_main_name name
+      resource.resource = Resource.find_by_name name
       resource.quantity = 0
     end
     resource.quantity += quantity

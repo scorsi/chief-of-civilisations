@@ -1,24 +1,15 @@
 class CreateSchemes < ActiveRecord::Migration[5.1]
   def change
 
-    ## Main
-    #  ----
-    #  The main table contains a name and a description for each things
-    #  The name is unique because everything must be unique!
-    #
-    create_table :mains do |t|
-      t.string :name
-      t.text :description
-    end
-    add_index :mains, :name, unique: true
-
     ## Resources
     #  -----------------
     #  The resources can be gathered or created
     #
     create_table :resources do |t|
-      t.references :main, foreign_key: true
+      t.string :name
+      t.text :description
     end
+    add_index :resources, :name, unique: true
 
     ## Buildings
     #  ---------
@@ -26,9 +17,11 @@ class CreateSchemes < ActiveRecord::Migration[5.1]
     #  It permits to gather resources, build buildings, learn technologies...
     #
     create_table :buildings do |t|
-      t.references :main, foreign_key: true
+      t.string :name
+      t.text :description
       t.integer :maximum, default: 1
     end
+    add_index :buildings, :name, unique: true
 
     ## Gather Buildings
     #  ----------------
@@ -48,7 +41,7 @@ class CreateSchemes < ActiveRecord::Migration[5.1]
       t.references :gather_building, foreign_key: true
       t.integer :tier
       t.integer :capacity
-      t.integer :rps # Resources per seconds
+      t.integer :rpm # Resources per minutes
       t.float :increase # The increase of rps for each level of the building
     end
     add_index :gather_building_tiers, %i[gather_building_id tier], unique: true
