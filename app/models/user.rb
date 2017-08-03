@@ -1,4 +1,7 @@
+
 class User < ApplicationRecord
+
+  has_one :chief
 
   attr_accessor :login
 

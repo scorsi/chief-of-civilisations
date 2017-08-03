@@ -1,0 +1,19 @@
+<div id="overview-resources">
+    <h2>Resources</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @chief.resources.each do |resource| %>
+        <tr>
+            <th><%= resource.name.capitalize %></th>
+            <th><%= resource.quantity %></th>
+        </tr>
+        <% end %>
+        </tbody>
+    </table>
+</div>

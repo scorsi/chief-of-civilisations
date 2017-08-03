@@ -1,0 +1,5 @@
+<% if require_quantity > actual_quantity %>
+    <span class="badge badge-danger badge-pill"><%= require_quantity %> / <%= actual_quantity %></span>
+<% else %>
+    <span class="badge badge-success badge-pill"><%= require_quantity %> / <%= actual_quantity %></span>
+<% end %>

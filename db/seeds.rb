@@ -2,89 +2,99 @@
 ### Seeds ###
 #############
 
+def create_main(name, description)
+  main = Main.find_by_name name
 
-## Functions
-
-
-def create_main (name, description)
-  Main.create name: name, description: description
+  return nil unless main.nil?
+  Main.create name: name, description: description if main.nil?
 end
 
-def create_primary_resources (primary_resource)
-  main = create_main primary_resource[0], primary_resource[1]
-  AbstractPrimaryResource.create main: main
+def create_resource(name, description)
+  main = create_main name, description
+  Resource.create main: main unless main.nil?
 end
 
-def create_building (building)
-  main = create_main building[0], building[1]
-  AbstractBuilding.create main: main, maximum: building[2], special: building[3]
+def create_building(name, description)
+  main = create_main name, description
+  Building.create main: main unless main.nil?
 end
 
-def create_building_tier (building_tier)
-  building = AbstractBuilding.find_by_main_name building_tier[0]
-  if building != nil
-    tier = AbstractBuildingTier.create abstract_building: building, number: building_tier[1]
-    building_tier[2].each do |require_primary_resource|
-      r_primary_resource = AbstractPrimaryResource.find_by_main_name require_primary_resource[0]
-      AbstractBuildingTierPrimaryResource.create abstract_building_tier: tier, abstract_primary_resource: r_primary_resource, number: require_primary_resource[1]
-    end
-    building_tier[3].each do |require_building|
-      r_building = AbstractBuilding.find_by_main_name require_building[0]
-      AbstractBuildingTierBuilding.create abstract_building_tier: tier, abstract_building: r_building, number: require_building[1]
-    end
-    building_tier[4].each do |require_technology|
-      r_technology = AbstractTechnology.find_by_main_name require_technology[0]
-      AbstractBuildingTierTechnology.create abstract_building_tier: tier, abstract_technology: r_technology, number: require_technology[1]
-    end
+def create_building_tier(name, tier, require_resources)
+  building = Building.find_by_main_name name
+  return if building.nil?
+  building_tier = BuildingTier.create building: building, tier: tier
+  require_resources.each do |require_resource|
+    resource = Resource.find_by_main_name require_resource[0]
+    next if resource.nil?
+    BuildingTierResource.create building_tier: building_tier, resource: resource,
+                                quantity: require_resource[1], increase: require_resource[2]
   end
 end
 
-def create_technology (technology)
-  main = create_main technology[0], technology[1]
-  AbstractTechnology.create main: main, special: technology[2]
+def create_gather_building(building_name, resource_name)
+  resource = Resource.find_by_main_name resource_name
+  building = Building.find_by_main_name building_name
+  return if building.nil? or resource.nil?
+  GatherBuilding.create building: building, resource: resource
 end
 
-
-## Data
-
-
-### PRIMARY RESOURCES
-
-primary_resources = [['wood', 'One of the first resource'],
-                     ['steel', 'At its discovering, the population has evolve faster']]
-primary_resources.each do |primary_resource|
-  create_primary_resources primary_resource
+# TODO: ADD GATHER BUILDING TIER ON BUILDING __AND RESOURCE__!
+def create_gather_building_tier(name, tier, capacity, rps, increase)
+  gather_building = GatherBuilding.find_by_building_name name
+  return if gather_building.nil?
+  GatherBuildingTier.create gather_building: gather_building, tier: tier,
+                            rps: rps, increase: increase, capacity: capacity
 end
+
+def create_starter_resource(name, quantity)
+  resource = Resource.find_by_main_name name
+  StarterResource.create resource: resource, quantity: quantity unless resource.nil?
+end
+
+def create_starter_building(name)
+  building = Building.find_by_main_name name
+  StarterBuilding.create building: building unless building.nil?
+end
+
+######################################################################
+
+### RESOURCES
+
+create_resource 'wood', 'One of the primary resource'
+create_resource 'steel', 'At its discovering, the population has evolved faster'
+create_resource 'food', 'The food is vital'
 
 ### BUILDINGS
 
-buildings = [['citadel', 'The main building', 1, false],
-             ['barrack', 'The building to train your army', 1, false]]
-buildings.each do |building|
-  create_building building
-end
+# Citadel
+create_building 'citadel', 'The main building'
+# Barrack
+create_building 'barrack', 'The building to train your army'
+# Lumberyard
+create_building 'lumberyard', 'The lumberjack give all the needed wood to the Citadel'
+create_gather_building 'lumberyard', 'wood'
+# Farm
+create_building 'farm', 'The farm give all the require food to the population'
+create_gather_building 'farm', 'food'
 
-### TECHNOLOGIES
+### TIERS
 
-technologies = [['exploration', 'The exploration permits to discover many new technologies, new cultures and new populations', false]]
-technologies.each do |technology|
-  create_technology technology
-end
+# Citadel
+create_building_tier 'citadel', 1, [['wood', 100, 0.2]]
+create_building_tier 'citadel', 2, [['wood', 500, 0.3], ['food', 200, 0.1]]
+# Barrack
+create_building_tier 'barrack', 1, [['wood', 200, 0.15]]
+# Lumberyard
+create_building_tier 'lumberyard', 1, [['wood', 50, 0.1]]
+create_building_tier 'lumberyard', 2, [['wood', 350, 0.1]]
+create_gather_building_tier 'lumberyard', 1, 100, 10, 0.05
+create_gather_building_tier 'lumberyard', 2, 650,30, 0.05
+# Farm
+create_building_tier 'farm', 1, [['wood', 50, 0.1]]
+create_building_tier 'farm', 2, [['wood', 250, 0.1]]
+create_gather_building_tier 'farm', 1, 100, 10, 0.05
 
-### BUILDING TIERS
+### STARTERS
 
-building_tiers = [['citadel', 1,
-                   [['wood', 10]],
-                   [],
-                   []],
-                  ['citadel', 2,
-                   [['wood', 25], ['steel', 5]],
-                   [['barrack', 1]],
-                   []],
-                  ['barrack', 1,
-                   [['wood', 5]],
-                   [['citadel', 1]],
-                   []]]
-building_tiers.each do |building_tier|
-  create_building_tier building_tier
-end
+create_starter_resource 'wood', 100
+create_starter_building 'lumberyard'

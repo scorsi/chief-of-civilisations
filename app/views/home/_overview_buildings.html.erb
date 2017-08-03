@@ -1,0 +1,11 @@
+<div id="overview-resources">
+    <h2><%= link_to 'Buildings', building_path %></h2>
+    <ul class="list-group">
+        <% @chief.buildings.each do |building| %>
+            <li class="list-group-item">
+                <%= link_to building.name.capitalize, building_show_path(building.name) %>
+                <%= render partial: 'partials/level', locals: { tier: building.tier, level: building.level } %>
+            </li>
+        <% end %>
+    </ul>
+</div>

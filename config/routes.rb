@@ -1,12 +1,19 @@
 Rails.application.routes.draw do
 
-  get 'buildings', to: 'buildings#index', as: 'buildings_index'
+  root 'home#index'
 
-  get 'buildings/:name', to: 'buildings#show', as: 'buildings_show'
+  get 'buildings', to: 'building#index', as: 'building'
+
+  get 'building/:name', to: 'building#show', as: 'building_show'
+
+  post 'building/:name/upgrade', to: 'building#upgrade', as: 'building_upgrade'
+
+  post 'building/:name/collect', to: 'building#collect', as: 'building_collect'
+
+  post 'chief', to: 'chief#create', as: 'create_chief'
+
+  delete 'chief', to: 'chief#delete', as: 'delete_chief'
 
   devise_for :users
 
-  root 'home#index'
-
-  default_url_options host: 'localhost:3000'
 end

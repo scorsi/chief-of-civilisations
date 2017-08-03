@@ -1,0 +1,12 @@
+<% if @chief.nil? %>
+    <h1>No chief?</h1>
+    <%= render partial: 'home/create_chief' %>
+<% else %>
+    <h1>Overview</h1>
+    <div class="row">
+        <div class="col-md-6"><%= render partial: 'home/overview_buildings' %></div>
+        <div class="col-md-6"><%= render partial: 'home/overview_resources' %></div>
+    </div>
+    <hr>
+    <%= render partial: 'home/delete_chief' %>
+<% end %>

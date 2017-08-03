@@ -1,0 +1,6 @@
+<div id="delete-chief-action">
+    <h2>Want to restart a new game?</h2>
+    <p>You already have a chief attached to your account, do you want to delete it?</p>
+    <%= link_to 'Delete your chief', delete_chief_path, method: :delete, class: 'btn btn-danger',
+                'data-confirm': 'Are you sure? This will totally erase all data!' %>
+</div>
