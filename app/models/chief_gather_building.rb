@@ -31,11 +31,12 @@ class ChiefGatherBuilding < ApplicationRecord
     tier = tiers.where('tier <= :value', value: chief_building.tier).order(tier: :desc).first
     time = Time.now.to_time.to_f - last_update.to_time.to_f
 
-    self.quantity += tier.rpm * time / 60
+    rpm = tier.rpm
     (1..chief_building.level - 1).each do
-      self.quantity *= (1 + tier.increase)
+      rpm *= (1 + tier.increase)
     end
-
+    self.quantity += tier.rpm * time / 60
+    
     self.quantity = tier.capacity if quantity > tier.capacity
     self.quantity = quantity.round unless quantity > tier.capacity
 
