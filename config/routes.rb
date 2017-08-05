@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   post 'building/:building_name/collect/:resource_name', to: 'building#collect', as: 'building_collect'
 
+  post 'building/:building_name/construct', to: 'building#construct', as: 'building_construct'
+
   post 'chief', to: 'chief#create', as: 'create_chief'
 
   delete 'chief', to: 'chief#delete', as: 'delete_chief'
