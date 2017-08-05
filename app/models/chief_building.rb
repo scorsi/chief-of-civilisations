@@ -7,7 +7,9 @@ class ChiefBuilding < ApplicationRecord
 
   alias_attribute :gather_buildings, :chief_gather_buildings
 
-  scope :building_name, ->(name) { joins(:building).where('buildings.name' => name) }
+  scope :building_name, ->(name) { joins(:building).where 'buildings.name': name }
+
+  scope :ordered, -> { joins(:building).order 'buildings.id' }
 
   after_create :create_gather_buildings
 
