@@ -67,17 +67,12 @@ create_gather_building 'lumberyard', 'wood'
 # Farm
 create_building 'farm', 'The farm give all the require food to the population'
 create_gather_building 'farm', 'food'
-# Extra collect building
-create_building 'extra collect building', 'A cheated building'
-create_gather_building 'extra collect building', 'food'
-create_gather_building 'extra collect building', 'steel'
-create_gather_building 'extra collect building', 'wood'
 
 ### TIERS
 
 # Citadel
 create_building_tier 'citadel', 1, [['wood', 100, 0.2]]
-create_building_tier 'citadel', 2, [['wood', 500, 0.3], ['food', 200, 0.1]]
+create_building_tier 'citadel', 2, [['wood', 500, 0.3], ['food', 200, 0.1], ['steel', 350, 0.3]]
 # Barrack
 create_building_tier 'barrack', 1, [['wood', 200, 0.15]]
 # Lumberyard
@@ -89,14 +84,8 @@ create_gather_building_tier 'lumberyard', 'wood', 2, 650, 30, 0.05
 create_building_tier 'farm', 1, [['wood', 50, 0.1]]
 create_building_tier 'farm', 2, [['wood', 250, 0.1]]
 create_gather_building_tier 'farm', 'food', 1, 100, 10, 0.05
-# Extra collect building
-create_building_tier 'extra collect building', 1, []
-create_gather_building_tier 'extra collect building', 'food', 1, 1000, 100, 0
-create_gather_building_tier 'extra collect building', 'wood', 1, 1000, 100, 0
-create_gather_building_tier 'extra collect building', 'steel', 1, 1000, 100, 0
 
 ### STARTERS
 
 create_starter_resource 'wood', 100
 create_starter_building 'lumberyard'
-create_starter_building 'extra collect building'
