@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
+  get 'overview', to: 'home#overview', as: 'overview'
+
   get 'buildings', to: 'building#index', as: 'building'
 
   get 'building/:building_name', to: 'building#show', as: 'building_show'

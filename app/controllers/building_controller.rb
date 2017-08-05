@@ -3,8 +3,7 @@ class BuildingController < ApplicationController
   before_action :authenticate_user!
   before_action :check_chief
 
-  def index
-  end
+  def index; end
 
   def show
     @building = get_chief_building_by_name params[:building_name]
