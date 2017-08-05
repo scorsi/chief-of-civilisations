@@ -1,9 +1,12 @@
 class BuildingController < ApplicationController
-
   before_action :authenticate_user!
   before_action :check_chief
 
-  def index; end
+  def index
+    @buildings = Building.order(:id).all.reject do |building|
+      building.maximum <= @chief.buildings.building_name(building.name).count
+    end
+  end
 
   def show
     @building = get_chief_building_by_name params[:building_name]
@@ -19,9 +22,15 @@ class BuildingController < ApplicationController
 
   def collect
     @building = @chief.gather_buildings.building_name(params[:building_name])
-      .resource_name(params[:resource_name]).first
+                      .resource_name(params[:resource_name]).first
     @building.collect
     redirect_to building_show_path @building.name
+  end
+
+  def construct
+    building = Building.find_by_name(params[:building_name])
+    building.construct @chief
+    redirect_to building_show_path params[:building_name]
   end
 
   private
@@ -34,5 +43,4 @@ class BuildingController < ApplicationController
   def get_chief_building_by_name(name)
     @chief.buildings.building_name(name).first
   end
-
 end

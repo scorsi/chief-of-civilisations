@@ -1,2 +1,7 @@
 <h1>My Buildings</h1>
 <%= render partial: 'home/overview_buildings' %>
+<h2>Construct</h2>
+<% @buildings.each do |building| %>
+    <%= link_to building.name.capitalize, building_construct_path(building.name), method: :post %>
+    <br />
+<% end %>
