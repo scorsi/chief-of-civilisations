@@ -83,8 +83,8 @@ class CreateSchemes < ActiveRecord::Migration[5.1]
     create_table :chief_buildings do |t|
       t.references :chief, foreign_key: true
       t.references :building, foreign_key: true
-      t.integer :level
-      t.integer :tier
+      t.integer :level, default: 1
+      t.integer :tier, default: 1
     end
 
     ## Chief Gather Buildings

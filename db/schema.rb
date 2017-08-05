@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(version: 20170802082438) do
   create_table "chief_buildings", force: :cascade do |t|
     t.bigint "chief_id"
     t.bigint "building_id"
-    t.integer "level"
-    t.integer "tier"
+    t.integer "level", default: 1
+    t.integer "tier", default: 1
     t.index ["building_id"], name: "index_chief_buildings_on_building_id"
     t.index ["chief_id"], name: "index_chief_buildings_on_chief_id"
   end
