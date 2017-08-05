@@ -4,7 +4,10 @@
 </blockquote>
 <% if @building.collect? %>
     <% @building.collect_info.each do |collect_info| %>
-        <p class="display-4"><%= collect_info.resource.name.capitalize %></p>
+        <p>
+            <span class="display-4"><%= collect_info.resource.name.capitalize %></span>
+            RPM: <%= collect_info.rpm %> | CAPACITY: <%= collect_info.capacity %>
+        </p>
         <div class="row">
             <div class="col-md-8">
                 <%= render partial: 'partials/progressbar',
