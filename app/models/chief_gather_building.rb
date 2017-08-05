@@ -9,6 +9,13 @@ class ChiefGatherBuilding < ApplicationRecord
 
   after_find :update_quantity
 
+  @tier_object = nil
+
+  def tier
+    @tier_object = tiers.where('tier <= :value', value: chief_building.tier).order(tier: :desc).first if @tier_object.nil?
+    @tier_object
+  end
+
   def name
     gather_building.building.name
   end
@@ -21,14 +28,15 @@ class ChiefGatherBuilding < ApplicationRecord
     gather_building.tiers
   end
 
+  def rpm
+    tier.rpm
+  end
+
   def capacity
-    tier = tiers.where('tier <= :value', value: chief_building.tier).order(tier: :desc).first
-    return 0 if tier.nil?
     tier.capacity
   end
 
   def update_quantity
-    tier = tiers.where('tier <= :value', value: chief_building.tier).order(tier: :desc).first
     time = Time.now.to_time.to_f - last_update.to_time.to_f
 
     rpm = tier.rpm
@@ -36,7 +44,7 @@ class ChiefGatherBuilding < ApplicationRecord
       rpm *= (1 + tier.increase)
     end
     self.quantity += tier.rpm * time / 60
-    
+
     self.quantity = tier.capacity if quantity > tier.capacity
     self.quantity = quantity.round unless quantity > tier.capacity
 
