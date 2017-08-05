@@ -7,19 +7,20 @@ class BuildingController < ApplicationController
   end
 
   def show
-    @building = get_chief_building_by_name params[:name]
+    @building = get_chief_building_by_name params[:building_name]
     return redirect_to building_path if @building.nil?
     @building_tier = @building.upgrade_require_resource
   end
 
   def upgrade
-    @building = get_chief_building_by_name params[:name]
+    @building = get_chief_building_by_name params[:building_name]
     @building.upgrade
     redirect_to building_show_path @building.name
   end
 
   def collect
-    @building = get_chief_building_by_name params[:name]
+    @building = @chief.gather_buildings.building_name(params[:building_name])
+      .resource_name(params[:resource_name]).first
     @building.collect
     redirect_to building_show_path @building.name
   end
@@ -32,10 +33,7 @@ class BuildingController < ApplicationController
   end
 
   def get_chief_building_by_name(name)
-    @chief.buildings.each do |building|
-      return building if building.name == name
-    end
-    nil
+    @chief.buildings.building_name(name).first
   end
 
 end

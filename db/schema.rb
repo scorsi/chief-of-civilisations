@@ -44,9 +44,17 @@ ActiveRecord::Schema.define(version: 20170802082438) do
     t.bigint "building_id"
     t.integer "level"
     t.integer "tier"
-    t.datetime "last_collect_time", default: "2017-08-03 17:07:11"
     t.index ["building_id"], name: "index_chief_buildings_on_building_id"
     t.index ["chief_id"], name: "index_chief_buildings_on_chief_id"
+  end
+
+  create_table "chief_gather_buildings", force: :cascade do |t|
+    t.bigint "chief_building_id"
+    t.bigint "gather_building_id"
+    t.datetime "last_update", default: -> { "now()" }
+    t.integer "quantity", default: 0
+    t.index ["chief_building_id"], name: "index_chief_gather_buildings_on_chief_building_id"
+    t.index ["gather_building_id"], name: "index_chief_gather_buildings_on_gather_building_id"
   end
 
   create_table "chief_resources", force: :cascade do |t|
@@ -129,6 +137,8 @@ ActiveRecord::Schema.define(version: 20170802082438) do
   add_foreign_key "building_tiers", "buildings"
   add_foreign_key "chief_buildings", "buildings"
   add_foreign_key "chief_buildings", "chiefs"
+  add_foreign_key "chief_gather_buildings", "chief_buildings"
+  add_foreign_key "chief_gather_buildings", "gather_buildings"
   add_foreign_key "chief_resources", "chiefs"
   add_foreign_key "chief_resources", "resources"
   add_foreign_key "chiefs", "users"

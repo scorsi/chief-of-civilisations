@@ -1,0 +1,5 @@
+<% average = (100 - (max - min) / max * 100).to_i %>
+<div class="progress" style="margin-top: 12px">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+         style="width: <%= average %>%;" aria-valuenow="<%= average %>" aria-valuemin="0" aria-valuemax="100"><%= min.to_i %> / <%= max.to_i %></div>
+</div>

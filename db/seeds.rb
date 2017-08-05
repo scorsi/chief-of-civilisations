@@ -30,8 +30,8 @@ def create_gather_building(building_name, resource_name)
 end
 
 # TODO: ADD GATHER BUILDING TIER ON BUILDING __AND RESOURCE__!
-def create_gather_building_tier(name, tier, capacity, rpm, increase)
-  gather_building = GatherBuilding.find_by_building_name name
+def create_gather_building_tier(building_name, resource_name, tier, capacity, rpm, increase)
+  gather_building = GatherBuilding.building_name(building_name).resource_name(resource_name).first
   return if gather_building.nil?
   GatherBuildingTier.create gather_building: gather_building, tier: tier,
                             rpm: rpm, increase: increase, capacity: capacity
@@ -67,6 +67,11 @@ create_gather_building 'lumberyard', 'wood'
 # Farm
 create_building 'farm', 'The farm give all the require food to the population'
 create_gather_building 'farm', 'food'
+# Extra collect building
+create_building 'extra collect building', 'A cheated building'
+create_gather_building 'extra collect building', 'food'
+create_gather_building 'extra collect building', 'steel'
+create_gather_building 'extra collect building', 'wood'
 
 ### TIERS
 
@@ -78,14 +83,20 @@ create_building_tier 'barrack', 1, [['wood', 200, 0.15]]
 # Lumberyard
 create_building_tier 'lumberyard', 1, [['wood', 50, 0.1]]
 create_building_tier 'lumberyard', 2, [['wood', 350, 0.1]]
-create_gather_building_tier 'lumberyard', 1, 100, 10, 0.05
-create_gather_building_tier 'lumberyard', 2, 650, 30, 0.05
+create_gather_building_tier 'lumberyard', 'wood', 1, 100, 10, 0.05
+create_gather_building_tier 'lumberyard', 'wood', 2, 650, 30, 0.05
 # Farm
 create_building_tier 'farm', 1, [['wood', 50, 0.1]]
 create_building_tier 'farm', 2, [['wood', 250, 0.1]]
-create_gather_building_tier 'farm', 1, 100, 10, 0.05
+create_gather_building_tier 'farm', 'food', 1, 100, 10, 0.05
+# Extra collect building
+create_building_tier 'extra collect building', 1, []
+create_gather_building_tier 'extra collect building', 'food', 1, 1000, 100, 0
+create_gather_building_tier 'extra collect building', 'wood', 1, 1000, 100, 0
+create_gather_building_tier 'extra collect building', 'steel', 1, 1000, 100, 0
 
 ### STARTERS
 
 create_starter_resource 'wood', 100
 create_starter_building 'lumberyard'
+create_starter_building 'extra collect building'

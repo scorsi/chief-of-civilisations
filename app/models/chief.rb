@@ -5,15 +5,14 @@ class Chief < ApplicationRecord
 
   has_many :chief_buildings, dependent: :destroy
   has_many :chief_resources, dependent: :destroy
+  has_many :chief_gather_buildings, through: :chief_buildings, dependent: :destroy
 
   alias_attribute :buildings, :chief_buildings
+  alias_attribute :gather_buildings, :chief_gather_buildings
   alias_attribute :resources, :chief_resources
 
   def resource_of(name)
-    resources.each do |resource|
-      return resource if resource.name == name
-    end
-    nil
+    resources.joins(:resource).where('resources.name': name).first
   end
 
   def use_resource_of(name, quantity)

@@ -3,6 +3,13 @@ class ChiefBuilding < ApplicationRecord
 
   belongs_to :chief
   belongs_to :building
+  has_many :chief_gather_buildings, dependent: :destroy
+
+  alias_attribute :gather_buildings, :chief_gather_buildings
+
+  scope :building_name, ->(name) { joins(:building).where('buildings.name' => name) }
+
+  after_create :create_gather_buildings
 
   def self.create_from_starters(chief)
     starter_buildings = StarterBuilding.all
@@ -10,6 +17,13 @@ class ChiefBuilding < ApplicationRecord
       ChiefBuilding.create chief: chief,
                            building: starter_building.building,
                            level: 1, tier: 1
+    end
+  end
+
+  def create_gather_buildings
+    building.gather_infos.each do |gather_building|
+      ChiefGatherBuilding.create chief_building: self,
+                                 gather_building: gather_building
     end
   end
 
@@ -89,25 +103,19 @@ class ChiefBuilding < ApplicationRecord
   end
 
   def collect?
-    building.gather?
+    gather_buildings.any?
   end
 
-  def collect_capacity
-    return 0 unless collect?
-    building.gather_infos.first.collect_capacity self.tier
-  end
-
-  def collect_quantity
-    return 0 unless collect?
-    building.gather_infos.first.collect_quantity self.tier, self.level, self.last_collect_time
+  def collect_info
+    gather_buildings.order :id
   end
 
   def collect
     return unless collect?
-    building.gather_infos.each do |gather_info|
-      chief.gather_resource_of gather_info.resource.name, collect_quantity
-      self.last_collect_time = Time.now
-      save
+    gather_buildings.each do |gather_building|
+      quantity = gather_building.collect
+      puts quantity
+      chief.gather_resource_of gather_building.resource.name, quantity
     end
   end
 
