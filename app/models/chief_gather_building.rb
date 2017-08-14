@@ -43,8 +43,10 @@ class ChiefGatherBuilding < ApplicationRecord
     (1..chief_building.level - 1).each do
       rpm *= (1 + tier.increase)
     end
-    self.quantity += tier.rpm * time / 60
+    add_quantity = tier.rpm * time / 60
+    return if add_quantity < 1
 
+    self.quantity += add_quantity
     self.quantity = tier.capacity if quantity > tier.capacity
     self.quantity = quantity.round unless quantity > tier.capacity
 
